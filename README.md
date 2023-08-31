@@ -10,8 +10,31 @@
 Control de hilos con wait/notify. Productor/consumidor.
 
 1. Revise el funcionamiento del programa y ejecútelo. Mientras esto ocurren, ejecute jVisualVM y revise el consumo de CPU del proceso correspondiente. A qué se debe este consumo?, cual es la clase responsable?
+
+
+	Al inicio, el consumo de CPU es del 2%, cuando se ejecuta el programa, este cambia al 32% y de ello, el programa, usa el 12%, aproximadamente el 50% del total del uso de la CPU.
+	Cuando,ponemos en comentarios em la Clase StarProduction la línea "new Consumer(queue).start();" que inicia el hilo del consumidor, el porcentaje de CPU para el programa baja al
+	1.3%, o cual reduce considerablemente los recursos usados. Por tanto, la clase responsable del consumo es la clase Consumer. Revisando el código, el método de run() de esta clase,
+	la línea de código que se ejecuta dentro del while es "int elem=queue.poll();", por lo que esto es el que gasta más recursos computacionales.
+
+
+Imagen del consumo de CPU total:
+![](./img/CPU-taskManager.png)
+
+
+Imagen del consumo de CPU del programa ejecutándose:
+![](./img/Monitor.png)
+
+
+Imagen del consumo de CPU al comentar la línea de la clase Consumer:
+![](./img/Punto-1-consumo-bajo.png)
+
+
 2. Haga los ajustes necesarios para que la solución use más eficientemente la CPU, teniendo en cuenta que -por ahora- la producción es lenta y el consumo es rápido. Verifique con JVisualVM que el consumo de CPU se reduzca.
+
+
 3. Haga que ahora el productor produzca muy rápido, y el consumidor consuma lento. Teniendo en cuenta que el productor conoce un límite de Stock (cuantos elementos debería tener, a lo sumo en la cola), haga que dicho límite se respete. Revise el API de la colección usada como cola para ver cómo garantizar que dicho límite no se supere. Verifique que, al poner un límite pequeño para el 'stock', no haya consumo alto de CPU ni errores.
+
 
 ##### Parte II. – Avance para el jueves, antes de clase.
 
