@@ -52,15 +52,18 @@ Por lo que podemos decir que las modificaciones fueron suficientes para usar má
 Este es el nuevo consumo de CPU del computador si se produce rápido y se consume lento
 ![](img/Punto-1.3-taskManager-solucion.png)
 
+
 Del cual la ejecución de este programa consume el 0.6% apróximadamente
 ![](img/Punto-1.3-Monitor-solucion.png)
+
 
 Aquí se prueba que al poner un límite pequeño para el 'stock', no haya consumo alto de CPU ni errores. Se probó para un stock igual a 10
 
 Porcentaje total de CPU:
 ![](img/Punto-1.3-taskManager-stock.png)
 
-Porcentaje de CPU que usa el programa (0.7%):
+
+Porcentaje de CPU que usa el programa (0.2%):
 ![](img/Punto-1.3-Monitor-stock.png)
 
 
