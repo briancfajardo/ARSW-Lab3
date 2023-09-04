@@ -15,7 +15,8 @@ Control de hilos con wait/notify. Productor/consumidor.
 	Al inicio, el consumo de CPU es del 2%, cuando se ejecuta el programa, este cambia al 32% y de ello, el programa, usa el 12%, aproximadamente el 50% del total del uso de la CPU.
 	Cuando,ponemos en comentarios em la Clase StarProduction la línea "new Consumer(queue).start();" que inicia el hilo del consumidor, el porcentaje de CPU para el programa baja al
 	1.3%, o cual reduce considerablemente los recursos usados. Por tanto, la clase responsable del consumo es la clase Consumer. Revisando el código, el método de run() de esta clase,
-	la línea de código que se ejecuta dentro del while es "int elem=queue.poll();", por lo que esto es el que gasta más recursos computacionales.
+	hay un while (una espera activa) que siempre está esperando y consumiendo los recursos, mientras que el que produce los números se demora un poco más, por lo que se desperdician recursos 
+	computacionales.
 
 
 Imagen del consumo de CPU total:
@@ -32,8 +33,35 @@ Imagen del consumo de CPU al comentar la línea de la clase Consumer:
 
 2. Haga los ajustes necesarios para que la solución use más eficientemente la CPU, teniendo en cuenta que -por ahora- la producción es lenta y el consumo es rápido. Verifique con JVisualVM que el consumo de CPU se reduzca.
 
+Este es el nuevo consumo de CPU del computador
+![](./img/Punto-1-taskManager-solucion.png)
+
+
+Del cual la ejecución de este programa consume el 1.9%
+![](img/Punto-1-Monitor-solucion.png)
+
+
+![](img/Punto-1-Monitor-solucion-porcentaje.png)
+
+
+Por lo que podemos decir que las modificaciones fueron suficientes para usar más eficientemente la CPU
+
 
 3. Haga que ahora el productor produzca muy rápido, y el consumidor consuma lento. Teniendo en cuenta que el productor conoce un límite de Stock (cuantos elementos debería tener, a lo sumo en la cola), haga que dicho límite se respete. Revise el API de la colección usada como cola para ver cómo garantizar que dicho límite no se supere. Verifique que, al poner un límite pequeño para el 'stock', no haya consumo alto de CPU ni errores.
+
+Este es el nuevo consumo de CPU del computador si se produce rápido y se consume lento
+![](img/Punto-1.3-taskManager-solucion.png)
+
+Del cual la ejecución de este programa consume el 0.6% apróximadamente
+![](img/Punto-1.3-Monitor-solucion.png)
+
+Aquí se prueba que al poner un límite pequeño para el 'stock', no haya consumo alto de CPU ni errores. Se probó para un stock igual a 10
+
+Porcentaje total de CPU:
+![](img/Punto-1.3-taskManager-stock.png)
+
+Porcentaje de CPU que usa el programa (0.7%):
+![](img/Punto-1.3-Monitor-stock.png)
 
 
 ##### Parte II. – Avance para el jueves, antes de clase.
