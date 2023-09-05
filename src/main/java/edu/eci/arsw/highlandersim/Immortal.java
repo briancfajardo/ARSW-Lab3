@@ -3,6 +3,7 @@ package edu.eci.arsw.highlandersim;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -14,18 +15,16 @@ public class Immortal extends Thread {
     
     private int defaultDamageValue;
 
-    private final List<Immortal> immortalsPopulation;
+    private final CopyOnWriteArrayList <Immortal> immortalsPopulation;
 
     private final String name;
 
     private final Random r = new Random(System.currentTimeMillis());
     private final AtomicBoolean lock;
     public static final AtomicInteger lockInmortal = new AtomicInteger(0);
-    public static final AtomicInteger deadThreads = new AtomicInteger(0);
     private boolean dead;
-    public static boolean allDead = false;
 
-    public Immortal(String name, List<Immortal> immortalsPopulation, int health, int defaultDamageValue, ImmortalUpdateReportCallback ucb, AtomicBoolean lock) {
+    public Immortal(String name, CopyOnWriteArrayList<Immortal> immortalsPopulation, int health, int defaultDamageValue, ImmortalUpdateReportCallback ucb, AtomicBoolean lock) {
         super(name);
         this.updateCallback=ucb;
         this.name = name;
@@ -37,14 +36,11 @@ public class Immortal extends Thread {
 
     public void run() {
 
-        while (!dead && deadThreads.get() < immortalsPopulation.size()) {
+        while (!dead && immortalsPopulation.size() > 1) {
 
             checkPause();
-
             Immortal im;
-
             int myIndex = immortalsPopulation.indexOf(this);
-
             int nextFighterIndex = r.nextInt(immortalsPopulation.size());
 
             //avoid self-fight
@@ -77,11 +73,12 @@ public class Immortal extends Thread {
     }
 
 
+
     private void checkPause(){
         if(lock.get()){
             try {
                 lockInmortal.addAndGet(1);
-                if(lockInmortal.get() == (immortalsPopulation.size() - deadThreads.get())) {
+                if(lockInmortal.get() == (immortalsPopulation.size())) {
                     synchronized (lock){
                         lock.notifyAll();
                     }
@@ -96,6 +93,8 @@ public class Immortal extends Thread {
         }
     }
 
+
+
     public void fight(Immortal i2) {
 
         if (i2.getHealth() > 0) {
@@ -108,19 +107,14 @@ public class Immortal extends Thread {
 
             updateCallback.processReport("Fight: " + this + " vs " + i2+"\n");
 
-            if (deadThreads.get() + 1 == immortalsPopulation.size()) {
-                updateCallback.processReport("Winner: " + this +"\n");
-                allDead = true;
-            }
-
         }
 
     }
 
     public void killInmortal(){
         dead = true; // Mark this immortal as dead
-        deadThreads.incrementAndGet(); // Increase the count of dead immortals
         updateCallback.processReport(this + " is already dead!\n");
+        immortalsPopulation.remove(this);
     }
 
     public List<Immortal> assignHash(Immortal i2) {
