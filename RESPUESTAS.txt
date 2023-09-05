@@ -1,0 +1,18 @@
+Conclusiones Punto 10 Parte II:
+
+Nosotros consideramos que sí hay una condición de carrera, ya que al pelear con inmortales muertos, estos podrían revivir porque
+pueden seguir asestando golpes a los otros inmortales y, por tanto, ganar puntos de salud.
+
+Por tanto, debemos asegurarnos que el hilo que muera no vuelva a ser incluido en las peleas para quitarle la posibilidad de volver
+a la vida. En base a lo anterior y al código que tenemos hasta el momento, debemos: compartir el acceso a la lista de inmortales sin sincronización
+porque como nos dice el enunciado, esto haría demasiada lenta la simulación; y verificar cada vez que vayan a pelear si están vivos los involucrados,
+que el hilo cuando se muera no busque más pelea y por tanto, que no esté dispobible para pelear con los otros.
+
+Para lo anterior, se hizo uso de banderas, pues no se podía hacer uso de listas compartidas. Por tanto, creamos un método en la clase Inmortal
+llamado killThread que cambia el valor de muerte en cada hilo, agrega uno en el contador que cuenta los hilos muertos e imprime el mensaje de que el
+hilo murió. Además, se modificó al método fight de la misma clase para que verificara si se debía llamar a killThread en caso de que ya no tenga puntos
+de salud y verificara si solo quedaba un hilo vivo para ver si había un ganador del juego. Finalmente, agregamos una condición en el bloque anidado sincronizado
+para que no pelearan si alguno de los dos participantes estaban muertos.
+
+Adicionalmente, cuando hay muchos inmortales, el programa se demora demasiado en ejecutarse, y lanza un error de que posiblemente se excedieron los límites de
+memoria o de recursos. Por lo que no es recomendable ejecutar el programa con demasiados hilos.
